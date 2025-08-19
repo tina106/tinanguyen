@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tài Liệu Tổng Hợp Nội Bộ: Sapo OmniAI</title>
+    <!-- Tải thư viện Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tải thư viện Chart.js để tạo biểu đồ radar -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Tải font chữ Inter và Be Vietnam Pro -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Be+Vietnam+Pro:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Tùy chỉnh font chữ và màu nền cho toàn bộ trang */
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: #F0F4F8;
+            color: #2D3748;
+        }
+        h1, h2, h3, h4 {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Cài đặt chiều cao cho canvas biểu đồ để đảm bảo hiển thị tốt trên các thiết bị */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 50vh;
+            max-height: 450px;
+        }
+        /* Hiệu ứng chuyển động cho các hàng tính năng khi lọc */
+        .feature-row {
+            transition: opacity 0.3s ease-in-out;
+        }
+        /* Lớp CSS làm mờ các hàng tính năng không liên quan */
+        .dimmed {
+            opacity: 0.3;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-8 text-gray-800">
+
+    <div class="max-w-6xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+        <!-- Header của thông báo -->
+        <div class="bg-[#003F5C] p-8 text-white text-center">
+            <h1 class="text-4xl font-bold">Tài Liệu Tổng Hợp Nội Bộ</h1>
+            <p class="mt-2 text-xl font-light">App Đăng Bán Đa Sàn - Phân Tích & Chính Sách Giá</p>
+        </div>
+
+        <!-- Nội dung chính của tài liệu -->
+        <div class="p-8 md:p-12">
+            <!-- Phần thông báo nội bộ -->
+            <section id="internal-memo" class="mb-12">
+                <p class="text-sm font-light italic text-right text-gray-500 mb-4">Ngày 19 tháng 8 năm 2025</p>
+                <h2 class="text-2xl font-semibold mb-4">Gửi Anh em Khối Kinh doanh thân mến,</h2>
+                <p class="mb-4 text-gray-700">
+                    Để tối đa hóa hiệu quả kinh doanh và tạo điều kiện thuận lợi nhất cho khách hàng, đội ứng dụng sẽ điều chỉnh thời gian chính thức áp dụng chính sách giá cho Ứng dụng “Đăng bán đa sàn”.
+                </p>
+                <p class="mb-6 text-gray-700 font-medium">
+                    Cụ thể, thời gian áp dụng sẽ được lùi lại từ ngày 15/08/2025 sang ngày <span class="text-red-500 font-bold">01/09/2025</span>.
+                </p>
+                <p class="mb-8 text-gray-700">
+                    Việc này giúp chúng ta có thêm thời gian để giới thiệu và thuyết phục khách hàng về giá trị vượt trội của sản phẩm, đặc biệt là khi so sánh với các đối thủ trên thị trường.
+                </p>
+            </section>
+
+            <!-- Phần phân tích cạnh tranh -->
+            <section id="competitive-analysis" class="mb-12">
+                <h2 class="text-2xl font-bold text-center text-[#003F5C] mb-8">Phân Tích Chi Tiết Các Giải Pháp</h2>
+                <p class="text-gray-600 text-center max-w-2xl mx-auto mb-8">Sử dụng bộ lọc bên dưới để so sánh các tính năng chính giữa Sapo OmniAI và các đối thủ. Việc này giúp xác định rõ lợi thế cạnh tranh và định vị sản phẩm của chúng ta trên thị trường.</p>
+                <div id="filter-buttons" class="mt-6 flex flex-wrap justify-center gap-3">
+                    <button class="filter-btn bg-[#34657F] text-white font-semibold py-2 px-4 rounded-full shadow-md hover:bg-opacity-90 transition" data-filter="all">Tất Cả</button>
+                    <button class="filter-btn bg-white text-[#34657F] border border-[#34657F] font-semibold py-2 px-4 rounded-full shadow-md hover:bg-[#34657F] hover:text-white transition" data-filter="automation">Tự Động Hóa</button>
+                    <button class="filter-btn bg-white text-[#34657F] border border-[#34657F] font-semibold py-2 px-4 rounded-full shadow-md hover:bg-[#34657F] hover:text-white transition" data-filter="seo">Hỗ Trợ SEO</button>
+                    <button class="filter-btn bg-white text-[#34657F] border border-[#34657F] font-semibold py-2 px-4 rounded-full shadow-md hover:bg-[#34657F] hover:text-white transition" data-filter="price">Giá Bán</button>
+                </div>
+                <div id="competitor-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
+                </div>
+            </section>
+
+            <!-- Biểu đồ lợi thế -->
+            <section id="sapo-advantage" class="mb-12 bg-gray-50 p-8 rounded-lg shadow-inner">
+                <h3 class="text-2xl font-bold text-center text-[#003F5C] mb-4">Lợi Thế Vượt Trội Của Sapo OmniAI</h3>
+                <p class="text-gray-600 text-center max-w-3xl mx-auto mb-8">Biểu đồ radar dưới đây trực quan hóa sức mạnh của Sapo so với đối thủ trung bình trên thị trường, dựa trên các tiêu chí quan trọng nhất. Sapo dẫn đầu ở các mảng tự động hóa và hỗ trợ SEO, tạo ra giá trị khác biệt rõ rệt.</p>
+                <div class="chart-container">
+                    <canvas id="sapoRadarChart"></canvas>
+                </div>
+            </section>
+
+            <!-- Phần điểm nhấn tư vấn -->
+            <section id="sales-points" class="mb-12 bg-[#003F5C] p-8 rounded-lg shadow-xl">
+                <h3 class="text-2xl font-bold text-white mb-4">Các Điểm Nhấn Khi Tư Vấn Khách Hàng</h3>
+                <p class="text-gray-300 mb-6">Khi tư vấn, hãy nhấn mạnh các ưu thế cạnh tranh sau để khách hàng thấy được đây là một khoản đầu tư xứng đáng:</p>
+                <ul class="space-y-6 text-white">
+                    <!-- Điểm nhấn 1: Tối ưu thời gian -->
+                    <li>
+                        <h4 class="font-semibold text-xl flex items-center mb-1">
+                            <span class="bg-blue-200 text-blue-800 rounded-full w-8 h-8 flex items-center justify-center mr-3 font-bold">1</span>
+                            Tối ưu thời gian, tăng hiệu suất
+                        </h4>
+                        <p class="ml-11">
+                            Thay vì phải đăng sản phẩm thủ công lên từng sàn, khách hàng có thể đăng đồng thời lên Shopee, Lazada, TikTok Shop chỉ với một thao tác. Điều này <span class="font-medium text-orange-200">tiết kiệm thời gian đáng kể</span> và giúp họ tập trung vào các hoạt động cốt lõi khác.
+                        </p>
+                    </li>
+                    <!-- Điểm nhấn 2: Lợi thế SEO -->
+                    <li>
+                        <h4 class="font-semibold text-xl flex items-center mb-1">
+                            <span class="bg-blue-200 text-blue-800 rounded-full w-8 h-8 flex items-center justify-center mr-3 font-bold">2</span>
+                            Lợi thế về SEO - Điểm khác biệt lớn nhất
+                        </h4>
+                        <p class="ml-11">
+                            Đây là tính năng <span class="font-medium text-orange-200">độc quyền của Sapo</span>. Ứng dụng tích hợp công cụ đánh giá điểm SEO trực quan, giúp khách hàng biết chính xác họ cần làm gì để tối ưu từ khóa và nâng cao thứ hạng sản phẩm trên các sàn.
+                        </p>
+                    </li>
+                    <!-- Điểm nhấn 3: Đồng bộ tồn kho -->
+                    <li>
+                        <h4 class="font-semibold text-xl flex items-center mb-1">
+                            <span class="bg-blue-200 text-blue-800 rounded-full w-8 h-8 flex items-center justify-center mr-3 font-bold">3</span>
+                            Đồng bộ tồn kho chính xác, không lo rủi ro
+                        </h4>
+                        <p class="ml-11">
+                            Tự động liên kết sản phẩm giữa Sapo và các sàn theo SKU, đảm bảo tồn kho luôn chính xác và đồng nhất. Giúp khách hàng loại bỏ hoàn toàn tình trạng bán vượt số lượng, từ đó xây dựng uy tín và sự chuyên nghiệp của cửa hàng.
+                        </p>
+                    </li>
+                    <!-- Điểm nhấn 4: Dễ sử dụng -->
+                    <li>
+                        <h4 class="font-semibold text-xl flex items-center mb-1">
+                            <span class="bg-blue-200 text-blue-800 rounded-full w-8 h-8 flex items-center justify-center mr-3 font-bold">4</span>
+                            Dễ dàng sử dụng
+                        </h4>
+                        <p class="ml-11">
+                            Khách hàng không cần phải có kiến thức kỹ thuật phức tạp. Ứng dụng được xây dựng trên nền tảng Sapo OmniAI và rất dễ cài đặt, sử dụng.
+                        </p>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Phần giá bán -->
+            <section id="pricing" class="bg-gray-50 p-8 rounded-lg border border-gray-200 text-center">
+                <h3 class="text-2xl font-bold mb-4 text-[#003F5C]">Chính Sách Giá</h3>
+                <div class="bg-white text-[#003F5C] p-6 rounded-lg shadow-lg inline-block">
+                    <p class="text-lg font-semibold">Giá Bán Đề Xuất</p>
+                    <p class="text-4xl font-bold my-2">100,000 VNĐ/tháng</p>
+                    <p class="text-sm text-gray-600">Áp dụng từ 01/09/2025</p>
+                    <p class="text-sm text-gray-600 mt-1">Các trường hợp trước đó sẽ được hỗ trợ chính sách riêng.</p>
+                    <p class="text-sm text-gray-600 mt-1">Chiết khấu cho gói 12 tháng trở lên</p>
+                </div>
+            </section>
+            
+            <!-- Lời kết -->
+            <div class="mt-12 text-center">
+                <p class="text-lg font-semibold text-gray-700">Hãy tận dụng tối đa khoảng thời gian còn lại để giúp khách hàng hiểu rõ về những lợi ích này và chuẩn bị cho một đợt tăng trưởng doanh thu mạnh mẽ!</p>
+                <p class="mt-6 text-xl font-bold text-[#003F5C]">Chúc anh em thành công!</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dữ liệu giả lập về các đối thủ cạnh tranh
+        const competitorsData = [
+            {
+                name: "Sapo OmniAI",
+                solution: "App \"Đăng bán sản phẩm đa Sàn\"",
+                features: [
+                    { text: "Đăng sản phẩm lên Shopee, Lazada, TikTok Shop.", filter: "all" },
+                    { text: "Tích hợp sẵn từ khóa chuẩn SEO.", filter: "seo" },
+                    { text: "Tự động liên kết sản phẩm từ Sàn với Sapo.", filter: "automation" },
+                    { text: "Tiết kiệm thời gian đăng bán sản phẩm đa sàn và đa gian chỉ từ 2p/kênh.", filter: "automation" }
+                ],
+                pros: [
+                    "Tối ưu SEO, nâng cao thứ hạng tìm kiếm.",
+                    "Tiết kiệm thời gian liên kết sản phẩm.",
+                    "Hỗ trợ tự động liên kết sản phẩm."
+                ],
+                cons: ["Chi phí thêm nếu không sử dụng gói OmniAI."],
+                price: "100.000 VNĐ/tháng (từ 01/09/2025)",
+                isSapo: true
+            },
+            {
+                name: "Kiot Việt",
+                solution: "Tích hợp trong gói Chuyên nghiệp",
+                features: [
+                    { text: "Hỗ trợ đăng bán đa sàn (Tiktok, Shopee, Lazada, Sendo).", filter: "all" },
+                    { text: "Hỗ trợ tìm sản phẩm để liên kết thủ công.", filter: "all" },
+                    { text: "Không tự động liên kết sản phẩm.", filter: "automation" },
+                    { text: "Không hỗ trợ từ khóa chuẩn SEO.", filter: "seo" }
+                ],
+                pros: ["Đăng bán nhiều gian hàng.", "Đồng bộ đơn, tồn kho về Kiot Việt."],
+                cons: ["Không có phần tối ưu SEO."],
+                price: "Bao gồm trong gói Chuyên nghiệp",
+                isSapo: false
+            },
+            {
+                name: "Nhanh.vn",
+                solution: "Nhanh.Ecom",
+                features: [
+                    { text: "Đăng bán thủ công trên các sàn đã kết nối.", filter: "all" },
+                    { text: "Không hỗ trợ từ khóa chuẩn SEO.", filter: "seo" },
+                    { text: "Không đăng bán nhiều sàn cùng lúc.", filter: "automation" }
+                ],
+                pros: ["Đăng bán thủ công, tính năng cơ bản."],
+                cons: ["Quy trình thủ công.", "Không có tính năng SEO."],
+                price: "Theo gói dịch vụ",
+                isSapo: false
+            },
+            {
+                name: "Haravan",
+                solution: "Không hỗ trợ đăng bán trực tiếp",
+                features: [
+                    { text: "Chỉ hỗ trợ xuất file sản phẩm theo mẫu từng sàn.", filter: "all" },
+                    { text: "Nhà bán hàng phải nhập file ngược lại lên sàn.", filter: "automation" }
+                ],
+                pros: ["Dễ dàng quản lý dữ liệu sản phẩm qua file Excel."],
+                cons: ["Quy trình hoàn toàn thủ công.", "Không có tính năng đăng bán trực tiếp."],
+                price: "Theo gói dịch vụ",
+                isSapo: false
+            },
+            {
+                name: "Bigseller",
+                solution: "Sao chép sản phẩm thủ công",
+                features: [
+                    { text: "Đăng bán thủ công bằng cách sao chép sản phẩm.", filter: "all" },
+                    { text: "Có cấu hình tự động đổi nội dung và đăng bán trên sàn khác.", filter: "automation" },
+                    { text: "Không hỗ trợ từ khóa chuẩn SEO.", filter: "seo" },
+                    { text: "Không đăng bán nhiều sàn cùng lúc.", filter: "automation" }
+                ],
+                pros: ["Đăng bán thủ công, tính năng cơ bản."],
+                cons: ["Quy trình thủ công.", "Không có tính năng SEO."],
+                price: "Miễn phí (có thể có gói trả phí)",
+                isSapo: false
+            }
+        ];
+
+        /**
+         * Hàm tạo thẻ so sánh cho từng đối thủ
+         * @param {object} data - Dữ liệu của một đối thủ
+         * @returns {HTMLElement} Thẻ so sánh HTML
+         */
+        function createCompetitorCard(data) {
+            const card = document.createElement('div');
+            // Xác định màu viền và màu nền riêng cho thẻ của Sapo
+            const cardBorder = data.isSapo ? 'border-[#EF8354]' : 'border-gray-200';
+            const cardBg = data.isSapo ? 'bg-orange-50' : 'bg-white';
+            card.className = `p-6 rounded-lg shadow-lg border-2 ${cardBorder} ${cardBg}`;
+
+            // Tạo danh sách các tính năng
+            let featuresHTML = data.features.map(f => `<li class="feature-row" data-filter="${f.filter}">${f.text}</li>`).join('');
+            // Tạo danh sách ưu điểm
+            let prosHTML = data.pros.map(p => `<li><span class="text-green-500 mr-2">✔</span>${p}</li>`).join('');
+            // Tạo danh sách nhược điểm
+            let consHTML = data.cons.map(c => `<li><span class="text-red-500 mr-2">✖</span>${c}</li>`).join('');
+
+            card.innerHTML = `
+                <h3 class="text-xl font-bold text-center mb-1 ${data.isSapo ? 'text-[#EF8354]' : 'text-[#003F5C]'}">${data.name}</h3>
+                <p class="text-sm text-center text-gray-500 mb-4">${data.solution}</p>
+                
+                <div class="my-4">
+                    <h4 class="font-semibold mb-2 border-b pb-1">Tính Năng Chính</h4>
+                    <ul class="list-disc list-inside text-gray-700 space-y-1 text-sm">${featuresHTML}</ul>
+                </div>
+                
+                <div class="my-4">
+                    <h4 class="font-semibold mb-2 border-b pb-1">Ưu Điểm</h4>
+                    <ul class="text-gray-700 space-y-1 text-sm">${prosHTML}</ul>
+                </div>
+
+                <div class="my-4">
+                    <h4 class="font-semibold mb-2 border-b pb-1">Nhược Điểm</h4>
+                    <ul class="text-gray-700 space-y-1 text-sm">${consHTML}</ul>
+                </div>
+                
+                <div class="mt-6 pt-4 border-t feature-row" data-filter="price">
+                    <p class="text-sm font-semibold">Giá Bán:</p>
+                    <p class="font-bold ${data.isSapo ? 'text-[#EF8354]' : 'text-[#003F5C]'}">${data.price}</p>
+                </div>
+            `;
+            return card;
+        }
+
+        // Chờ toàn bộ nội dung HTML được tải xong
+        document.addEventListener('DOMContentLoaded', function() {
+            const grid = document.getElementById('competitor-grid');
+            // Hiển thị tất cả các thẻ đối thủ ban đầu
+            competitorsData.forEach(comp => {
+                grid.appendChild(createCompetitorCard(comp));
+            });
+
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const featureRows = document.querySelectorAll('.feature-row');
+
+            // Thiết lập sự kiện click cho các nút lọc
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const filter = button.dataset.filter;
+                    
+                    // Cập nhật trạng thái 'active' cho nút được chọn
+                    filterButtons.forEach(btn => {
+                        btn.classList.remove('bg-[#34657F]', 'text-white');
+                        btn.classList.add('bg-white', 'text-[#34657F]');
+                    });
+                    button.classList.add('bg-[#34657F]', 'text-white');
+                    button.classList.remove('bg-white', 'text-[#34657F]');
+
+                    // Lặp qua tất cả các hàng tính năng để ẩn/hiện
+                    featureRows.forEach(row => {
+                        if (filter === 'all' || row.dataset.filter === filter) {
+                            row.classList.remove('dimmed');
+                        } else {
+                            row.classList.add('dimmed');
+                        }
+                    });
+                });
+            });
+
+            // Khởi tạo biểu đồ radar
+            const radarCtx = document.getElementById('sapoRadarChart').getContext('2d');
+            new Chart(radarCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['Tự Động Hóa', 'Hỗ Trợ SEO', 'Dễ Sử Dụng', 'Đồng Bộ Tồn Kho', 'Chi Phí Ban Đầu'],
+                    datasets: [{
+                        label: 'Sapo OmniAI',
+                        data: [5, 5, 4, 5, 3],
+                        fill: true,
+                        backgroundColor: 'rgba(239, 131, 84, 0.2)',
+                        borderColor: 'rgb(239, 131, 84)',
+                        pointBackgroundColor: 'rgb(239, 131, 84)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(239, 131, 84)'
+                    }, {
+                        label: 'Đối Thủ Trung Bình',
+                        data: [2, 1, 3, 3, 4],
+                        fill: true,
+                        backgroundColor: 'rgba(52, 101, 127, 0.2)',
+                        borderColor: 'rgb(52, 101, 127)',
+                        pointBackgroundColor: 'rgb(52, 101, 127)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(52, 101, 127)'
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                color: '#BFC0C0'
+                            },
+                            grid: {
+                                color: '#BFC0C0'
+                            },
+                            pointLabels: {
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                },
+                                color: '#003F5C'
+                            },
+                            ticks: {
+                                backdropColor: '#F0F4F8',
+                                color: '#4F5D75',
+                                stepSize: 1,
+                                max: 5,
+                                min: 0
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: function(tooltipItems) {
+                                    const item = tooltipItems[0];
+                                    let label = item.chart.data.labels[item.dataIndex];
+                                    if (Array.isArray(label)) {
+                                      return label.join(' ');
+                                    } else {
+                                      return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
